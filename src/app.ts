@@ -24,7 +24,6 @@ import { UserContext } from "./interfaces/UserContext";
 const app = express();
 
 app.use(morgan("dev"));
-app.use(helmet());
 app.use(express.json());
 
 (async () => {
@@ -35,9 +34,8 @@ app.use(express.json());
 
     const permissions = shield({
       Mutation: {
-        createUser: rateLimitRule({ window: "1m", max: 5 }),
-        updateUser: rateLimitRule({ window: "1m", max: 5 }),
-        deleteUser: rateLimitRule({ window: "10m", max: 1 }),
+        updateUser: rateLimitRule({ window: "1s", max: 5 }),
+        deleteUser: rateLimitRule({ window: "1s", max: 5 }),
       },
     });
 

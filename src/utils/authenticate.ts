@@ -1,10 +1,10 @@
 import { Request } from "express";
 import jwt from "jsonwebtoken";
-import { TokenAndUser } from "../interfaces/User";
+import { OutputUser, TokenAndUser } from "../interfaces/User";
 
 export default async (req: Request) => {
   const bearer = req.headers.authorization;
-  const user = {
+  const authorization = {
     token: "",
     user: {
       id: "",
@@ -15,25 +15,25 @@ export default async (req: Request) => {
     },
   } as TokenAndUser;
   if (!bearer) {
-    return user;
+    return authorization;
   }
 
   const token = bearer.split(" ")[1];
 
   if (!token) {
-    return user;
+    return authorization;
   }
 
-  const userFromToken = jwt.verify(
+  authorization.user = jwt.verify(
     token,
     process.env.JWT_SECRET as string
-  ) as TokenAndUser;
+  ) as OutputUser;
 
-  if (!userFromToken) {
-    return user;
+  if (!authorization.user) {
+    return authorization;
   }
 
-  userFromToken.token = token;
+  authorization.token = token;
 
-  return userFromToken;
+  return authorization;
 };

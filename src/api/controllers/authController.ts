@@ -11,20 +11,27 @@ const token = async (
   next: NextFunction
 ) => {
   try {
-    console.log(userModel);
     const user = (await userModel.findOne({
       kideId: req.body.kideId,
     })) as OutputUser;
-    console.log(req.body.kideId);
-    console.log(user);
     if (!user) {
       next(new CustomError("User not found", 404));
       return;
     }
     let expiresIn = 86400000 * 2; // 2 days
-    const accessToken = jwt.sign(user, process.env.JWT_SECRET as string, {
-      expiresIn: expiresIn.toString(),
-    });
+    const accessToken = jwt.sign(
+      {
+        id: user.id,
+        username: user.username,
+        kideId: user.kideId,
+        admin: user.admin,
+        createdAt: user.createdAt,
+      },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: expiresIn.toString(),
+      }
+    );
     const message: LoginResponse = {
       message: "Token created",
       token: accessToken,

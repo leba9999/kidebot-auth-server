@@ -5,10 +5,12 @@ const userModel = new mongoose.Schema<User>({
   username: {
     type: String,
     required: true,
+    unique: true,
   },
   kideId: {
     type: String,
     required: true,
+    unique: true,
   },
   admin: {
     type: Boolean,

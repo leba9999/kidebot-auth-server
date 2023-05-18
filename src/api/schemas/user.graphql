@@ -11,13 +11,13 @@ type User {
 input UserInput {
   username: String!
   kideId: String!
-  admin: String
+  admin: Boolean
 }
 
 input UserModify {
-  username: String
-  kideId: String
-  admin: String
+  username: String!
+  kideId: String!
+  admin: Boolean
 }
 
 type Query {
