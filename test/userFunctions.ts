@@ -154,4 +154,35 @@ const loginUser = (
       });
   });
 };
-export { postUser, loginUser, postAdmin, postAsUserAdmin };
+const getUsers = (url: string | Function): Promise<TestUser[]> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post("/graphql")
+      .set("Content-type", "application/json")
+      .send({
+        query: `query Users {
+            users {
+              id
+              kideId
+              username
+              createdAt
+              admin
+            }
+          }`,
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const users = response.body.data.users;
+          expect(users).toBeInstanceOf(Array);
+          expect(users[0]).toHaveProperty("id");
+          expect(users[0]).toHaveProperty("username");
+          expect(users[0]).toHaveProperty("kideId");
+          expect(users[0]).toHaveProperty("admin");
+          resolve(response.body.data.users);
+        }
+      });
+  });
+};
+export { postUser, loginUser, postAdmin, postAsUserAdmin, getUsers };

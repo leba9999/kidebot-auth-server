@@ -4,11 +4,13 @@ import { getNotFound } from "./testFunctions";
 import LoginResponse from "../src/interfaces/Responses/LoginResponse";
 import { TestUser } from "../src/interfaces/User";
 import {
+  getUsers,
   loginUser,
   postAdmin,
   postAsUserAdmin,
   postUser,
 } from "./userFunctions";
+import { Express } from "express-serve-static-core";
 
 describe("Testing graphql api", () => {
   beforeAll(async () => {
@@ -95,6 +97,10 @@ describe("Testing graphql api", () => {
       },
       user1Data.token
     );
+  });
+
+  it("should return array of users", async () => {
+    await getUsers(app);
   });
 
   /*
