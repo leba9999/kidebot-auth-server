@@ -4,13 +4,14 @@ import { getNotFound } from "./testFunctions";
 import LoginResponse from "../src/interfaces/Responses/LoginResponse";
 import { TestUser } from "../src/interfaces/User";
 import {
+  adminDeleteUser,
+  deleteUser,
   getUsers,
   loginUser,
   postAdmin,
   postAsUserAdmin,
   postUser,
 } from "./userFunctions";
-import { Express } from "express-serve-static-core";
 
 describe("Testing graphql api", () => {
   beforeAll(async () => {
@@ -30,6 +31,7 @@ describe("Testing graphql api", () => {
   let user2Data: LoginResponse;
   let admin1Data: LoginResponse;
   let admin2Data: LoginResponse;
+  let admin3Data: LoginResponse;
 
   const testUser1: TestUser = {
     username: "testuser1",
@@ -87,6 +89,10 @@ describe("Testing graphql api", () => {
     user2Data = await loginUser(app, testUser2);
   });
 
+  it("should login third admin", async () => {
+    admin3Data = await loginUser(app, admin3);
+  });
+
   it("should not create a new user", async () => {
     await postAsUserAdmin(
       app,
@@ -101,6 +107,23 @@ describe("Testing graphql api", () => {
 
   it("should return array of users", async () => {
     await getUsers(app);
+  });
+
+  it("should delete a user as admin", async () => {
+    await adminDeleteUser(app, user2Data.user, admin2Data.token);
+  });
+
+  it("should delete a third admin as admin", async () => {
+    await adminDeleteUser(app, admin3Data.user, admin1Data.token);
+  });
+
+  it("should delete own admin account", async () => {
+    await deleteUser(app, admin2Data.token);
+  });
+
+  // test delete user based on token
+  it("should delete first user", async () => {
+    await deleteUser(app, user1Data.token);
   });
 
   /*

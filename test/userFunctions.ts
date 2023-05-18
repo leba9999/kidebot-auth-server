@@ -2,6 +2,7 @@ import request from "supertest";
 import expect from "expect";
 import { TestUser } from "../src/interfaces/User";
 import LoginResponse from "../src/interfaces/Responses/LoginResponse";
+import ErrorResponse from "../src/interfaces/Responses/ErrorResponse";
 
 const postUser = (
   url: string | Function,
@@ -185,4 +186,78 @@ const getUsers = (url: string | Function): Promise<TestUser[]> => {
       });
   });
 };
-export { postUser, loginUser, postAdmin, postAsUserAdmin, getUsers };
+const deleteUser = (
+  url: string | Function,
+  token: string
+): Promise<ErrorResponse> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post("/graphql")
+      .set("Authorization", "Bearer " + token)
+      .send({
+        query: `mutation DeleteUser {
+            deleteUser {
+              id
+              createdAt
+              admin
+              kideId
+              username
+            }
+          }`,
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const userData = response.body.data.deleteUser;
+          console.log(response.body);
+          expect(userData).toHaveProperty("id");
+          expect(userData).toHaveProperty("username");
+          resolve(response.body.data.deleteUser);
+        }
+      });
+  });
+};
+const adminDeleteUser = (
+  url: string | Function,
+  user: TestUser,
+  token: string
+): Promise<ErrorResponse> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post("/graphql")
+      .set("Authorization", "Bearer " + token)
+      .send({
+        query: `mutation AdminDeleteUser($adminDeleteUserId: ID!) {
+            adminDeleteUser(id: $adminDeleteUserId) {
+              admin
+              createdAt
+              id
+              kideId
+              username
+            }
+          }`,
+        variables: {
+          adminDeleteUserId: user.id,
+        },
+      })
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const userData = response.body.data.adminDeleteUser;
+          expect(userData.id).toBe(user.id);
+          resolve(response.body.data.deleteUser);
+        }
+      });
+  });
+};
+export {
+  postUser,
+  loginUser,
+  postAdmin,
+  postAsUserAdmin,
+  getUsers,
+  deleteUser,
+  adminDeleteUser,
+};
