@@ -14,5 +14,17 @@ interface OutputUser {
   admin: boolean;
   createdAt: Date;
 }
+interface TestUser {
+  id?: string;
+  username?: string;
+  kideId?: string;
+  admin?: boolean;
+  createdAt?: Date;
+}
 
-export { User, OutputUser };
+interface TokenAndUser {
+  token: string;
+  user: OutputUser;
+}
+
+export { User, OutputUser, TokenAndUser, TestUser };

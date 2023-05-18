@@ -31,4 +31,4 @@ userModel.set("toJSON", {
   virtuals: true,
 });
 
-export default mongoose.model<User>("whitelist", userModel);
+export default mongoose.model<User>("users", userModel);

@@ -1,0 +1,33 @@
+scalar DateTime
+
+type User {
+  id: ID!
+  kideId: String!
+  username: String!
+  createdAt: DateTime!
+  admin: Boolean!
+}
+
+input UserInput {
+  username: String!
+  kideId: String!
+  admin: String
+}
+
+input UserModify {
+  username: String
+  kideId: String
+  admin: String
+}
+
+type Query {
+  users: [User]
+  userById(id: ID!): User
+}
+
+type Mutation {
+  createUser(user: UserInput!): User
+  updateUser(user: UserModify!): User
+  deleteUser: User
+  adminDeleteUser(id: ID!): User
+}
