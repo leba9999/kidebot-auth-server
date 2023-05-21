@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node dist/src/index.js",
     "build": "tsc",
+    "copyGraphql": "copyfiles --error src/api/schemas/*.graphql dist",
+    "postbuild": "npm run copyGraphql",
     "dev": "nodemon src/index.ts",
     "test": "jest --detectOpenHandles --forceExit"
   },
@@ -35,6 +37,7 @@
     "graphql-middleware": "^6.1.33",
     "graphql-rate-limit": "^3.3.0",
     "graphql-shield": "^7.6.5",
+    "copyfiles": "^2.4.1",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.2",
