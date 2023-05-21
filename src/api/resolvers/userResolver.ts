@@ -45,7 +45,7 @@ export default {
     },
     updateUser: async (
       _parent: unknown,
-      args: { user: User },
+      args: { user: User; id: string },
       authorization: TokenAndUser
     ) => {
       if (!authorization.token || !authorization.user.admin) {
@@ -58,15 +58,25 @@ export default {
           extensions: { code: "NOT_FOUND" },
         });
       }
-      const user = await userModel.findById(args.user.id);
+      const user = await userModel.findById(args.id);
       if (!user) {
         throw new GraphQLError("User not found", {
           extensions: { code: "NOT_FOUND" },
         });
       }
-      return await userModel.findByIdAndUpdate(args.user.id, args.user, {
-        new: true,
-      });
+      let updatedUser;
+      try {
+        updatedUser = await userModel.findByIdAndUpdate(args.id, args.user, {
+          new: true,
+        });
+      } catch (error: any) {
+        console.log(error);
+        throw new GraphQLError(error.codeName + error.keyPattern, {
+          extensions: { code: error.codeName },
+        });
+      }
+      console.log(updatedUser);
+      return updatedUser;
     },
     deleteUser: async (
       _parent: unknown,

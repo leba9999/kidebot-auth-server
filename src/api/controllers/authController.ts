@@ -3,9 +3,9 @@ import { NextFunction, Request, Response } from "express";
 import userModel from "../models/userModel";
 import CustomError from "../../classes/CustomError";
 import LoginResponse from "../../interfaces/Responses/LoginResponse";
-import { OutputUser } from "../../interfaces/User";
+import { OutputUser, TokenAndUser } from "../../interfaces/User";
 
-const token = async (
+const newToken = async (
   req: Request<{}, {}, { kideId: string }>,
   res: Response,
   next: NextFunction
@@ -43,5 +43,48 @@ const token = async (
     next(new CustomError((error as Error).message, 500));
   }
 };
+const checkToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const bearer = req.headers.authorization;
+    const authorization = {
+      token: "",
+      user: {
+        id: "",
+        username: "",
+        kideId: "",
+        admin: false,
+        createdAt: new Date(),
+      },
+    } as TokenAndUser;
+    if (!bearer) {
+      next(new CustomError("Token not Found", 400));
+      return;
+    }
 
-export { token };
+    const token = bearer.split(" ")[1];
+
+    if (!token) {
+      next(new CustomError("Token not Found", 400));
+      return;
+    }
+
+    authorization.user = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as OutputUser;
+
+    if (!authorization.user) {
+      next(new CustomError("Not authorized", 400));
+      return;
+    }
+
+    authorization.token = token;
+
+    res.json(authorization);
+  } catch (error) {
+    console.log(error);
+    next(new CustomError((error as Error).message, 500));
+  }
+};
+
+export { checkToken, newToken };

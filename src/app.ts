@@ -75,7 +75,6 @@ app.use(express.json());
         context: async ({ req }) => authenticate(req),
       })
     );
-
     app.use("/api/v1", api);
     app.use(notFound);
     app.use(errorHandler);

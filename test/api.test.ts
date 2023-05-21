@@ -2,16 +2,22 @@ import mongoose from "mongoose";
 import app from "../src/app";
 import { getNotFound } from "./testFunctions";
 import LoginResponse from "../src/interfaces/Responses/LoginResponse";
-import { TestUser } from "../src/interfaces/User";
+import { OutputUser, TestUser } from "../src/interfaces/User";
 import {
   adminDeleteUser,
+  adminEditAdmin,
+  adminEditUser,
   deleteUser,
+  editUser,
+  getUser,
   getUsers,
+  loginBrute,
   loginUser,
   postAdmin,
   postAsUserAdmin,
   postUser,
 } from "./userFunctions";
+import { Express } from "express-serve-static-core";
 
 describe("Testing graphql api", () => {
   beforeAll(async () => {
@@ -27,6 +33,7 @@ describe("Testing graphql api", () => {
   it("responds with a not found message", async () => {
     await getNotFound(app);
   });
+
   let user1Data: LoginResponse;
   let user2Data: LoginResponse;
   let admin1Data: LoginResponse;
@@ -109,6 +116,33 @@ describe("Testing graphql api", () => {
     await getUsers(app);
   });
 
+  it("should return one user", async () => {
+    await getUser(app, user1Data.user);
+  });
+
+  it("User should not edit user", async () => {
+    const updatedUser: TestUser = {
+      username: "Updatedtestuser2",
+      kideId: "1111111111111",
+    };
+    await editUser(app, user2Data.user, updatedUser, user2Data.token);
+  });
+
+  it("Admin should edit user", async () => {
+    const updatedUser: TestUser = {
+      username: "Updatedtestuser2",
+      kideId: "1111111111112",
+    };
+    await adminEditUser(app, user2Data.user, updatedUser, admin2Data.token);
+  });
+  it("Admin should edit admin", async () => {
+    const updatedUser: TestUser = {
+      username: "UpdatedAdmin2",
+      kideId: "1111111111113",
+    };
+    await adminEditAdmin(app, admin2Data.user, updatedUser, admin1Data.token);
+  });
+
   it("should delete a user as admin", async () => {
     await adminDeleteUser(app, user2Data.user, admin2Data.token);
   });
@@ -126,20 +160,13 @@ describe("Testing graphql api", () => {
     await deleteUser(app, user1Data.token);
   });
 
-  /*
-  // test brute force protectiom
   test("Brute force attack simulation", async () => {
     const maxAttempts = 20;
-    const mockUser: UserTest = {
-      user_name: "Test User " + randomstring.generate(7),
-      email: randomstring.generate(9) + "@user.fi",
-      password: "notthepassword",
-    };
 
     try {
       // Call the mock login function until the maximum number of attempts is reached
       for (let i = 0; i < maxAttempts; i++) {
-        const result = await loginBrute(app, mockUser);
+        const result = await loginBrute(app, admin1Data.user);
         if (result) throw new Error("Brute force attack unsuccessful");
       }
 
@@ -151,5 +178,4 @@ describe("Testing graphql api", () => {
       expect((error as Error).message).toBe("Brute force attack unsuccessful");
     }
   }, 15000);
-  */
 });
