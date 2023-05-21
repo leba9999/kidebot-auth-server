@@ -158,7 +158,6 @@ describe("Testing graphql api", () => {
   it("should delete first user", async () => {
     await deleteUser(app, user1Data.token);
   });
-  /*
   test("Brute force attack simulation", async () => {
     const maxAttempts = 20;
 
@@ -177,5 +176,4 @@ describe("Testing graphql api", () => {
       expect((error as Error).message).toBe("Brute force attack unsuccessful");
     }
   }, 15000);
-  */
 });
