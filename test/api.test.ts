@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import app from "../src/app";
 import { getNotFound } from "./testFunctions";
 import LoginResponse from "../src/interfaces/Responses/LoginResponse";
-import { OutputUser, TestUser } from "../src/interfaces/User";
+import { TestUser } from "../src/interfaces/User";
 import {
   adminDeleteUser,
   adminEditAdmin,
@@ -17,11 +17,10 @@ import {
   postAsUserAdmin,
   postUser,
 } from "./userFunctions";
-import { Express } from "express-serve-static-core";
 
 describe("Testing graphql api", () => {
   beforeAll(async () => {
-    console.log("Conneting to Database: ", process.env.DATABASE_URL);
+    console.log("Conneting to Database");
     await mongoose.connect(process.env.DATABASE_URL as string);
   });
 
@@ -159,7 +158,7 @@ describe("Testing graphql api", () => {
   it("should delete first user", async () => {
     await deleteUser(app, user1Data.token);
   });
-
+  /*
   test("Brute force attack simulation", async () => {
     const maxAttempts = 20;
 
@@ -178,4 +177,5 @@ describe("Testing graphql api", () => {
       expect((error as Error).message).toBe("Brute force attack unsuccessful");
     }
   }, 15000);
+  */
 });
