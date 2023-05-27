@@ -20,6 +20,7 @@ import { notFound, errorHandler } from "./middlewares";
 import api from "./api";
 import authenticate from "./utils/authenticate";
 import { UserContext } from "./interfaces/UserContext";
+import RandomEvent from "./classes/RandomEvent";
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use(express.json());
       }),
       permissions
     );
+    console.dir(new RandomEvent(new Date()).getEvent(), { depth: null });
 
     app.use(
       helmet({
