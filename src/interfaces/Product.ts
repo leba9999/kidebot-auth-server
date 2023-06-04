@@ -1,6 +1,3 @@
-/**
- * Event itself and its information
- */
 interface Product {
   availability: number; // How many tickets are overall available
   city: string; // City of the event
@@ -46,6 +43,39 @@ interface Product {
   time: number; //Server time
   timeUntilSalesStart: number; // Time until the event sales start
 }
+
+interface Productlight {
+  id: string; // Id of the event
+  productType: number; // Type of the event. E.g. 1 = event, 2 = products, 3 = membership
+  companyName: string; // Name of the organizer
+  companyMediaFilename: null | string; // Filename of the organizer media
+  name: string; // Name of the event
+  mediaFilename: null | string; // Filename of the event media
+  place: string; // Place of the event
+  dateSalesFrom: Date; // When the event sales start
+  dateSalesUntil: Date; // When the event sales end
+  dateActualFrom: null | Date; // When the event starts
+  dateActualUntil: null | Date; // When the event ends
+  datePublishFrom: Date; // When the event was published
+  pricingInformation: null | string; // Todo find out what this is
+  maxPrice: null | Price; // Max price of the ticket
+  minPrice: null | Price; // Min price of the ticket
+  hasFreeInventoryItems: boolean; // Does the event have free tickets
+  hasInventoryItems: boolean; // Does the event have tickets
+  dateCreated: Date; // When the event was created
+  availability: number; // How many tickets are overall available
+  isFavorited: boolean; // Is the event favorited by current user
+  favoritedTimes: number; // How many times the event has been favorited
+  isLong: boolean; // TODO find out what this is
+  isActual: boolean; // TODO find out what this is
+  salesEnded: boolean; // Is the event sales ended
+  salesOngoing: boolean; // Is the event sales ongoing
+  salesPaused: boolean; // Is the event sales paused
+  salesStarted: boolean; // Is the event sales started
+  time: number; //Server time
+  timeUntilSalesStart: number; // Time until the event sales start
+}
+
 /**
  * Price of the ticket
  * Price in EUR (This is the only currency used as far as I know)
@@ -54,4 +84,4 @@ interface Price {
   eur: number; // Price in EUR (This is the only currency used as far as I know)
 }
 
-export { Product, Price };
+export { Product, Price, Productlight };

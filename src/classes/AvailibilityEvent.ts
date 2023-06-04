@@ -4,21 +4,18 @@ import CompanyBuilder from "./builders/CompanyBuilder";
 import ProductBuilder from "./builders/ProductBuilder";
 import VariantBuilder from "./builders/VariantBuilder";
 
-export default class RandomEvent {
+export default class AvailibilityEvent {
   date: Date;
   event: Event;
 
-  constructor(date: Date) {
+  constructor(date: Date, availibility: number) {
     this.date = date;
     let companyBuilder = new CompanyBuilder(new Date());
     let productBuilder = new ProductBuilder(this.date);
-    let RandomVariants = [];
+    let variantBuilder = new VariantBuilder(this.date);
     productBuilder.setCompany(companyBuilder.getCompany());
-    for (let i = 0; i < Math.floor(Math.random() * 20) + 1; i++) {
-      let variantBuilder = new VariantBuilder(this.date);
-      variantBuilder.setProduct(productBuilder.getProduct());
-      RandomVariants.push(variantBuilder.getVariant());
-    }
+    variantBuilder.setProduct(productBuilder.getProduct());
+    variantBuilder.setAvailibility(availibility);
     this.event = {
       links: null,
       model: {
@@ -26,7 +23,7 @@ export default class RandomEvent {
         company: companyBuilder.getCompany(),
         isHakaRequired: false,
         product: productBuilder.getProduct(),
-        variants: RandomVariants,
+        variants: [variantBuilder.getVariant()],
       },
     };
   }

@@ -11,10 +11,12 @@ export default class VariantBuilder {
   variant!: Variants;
   memberships: AccessControlMemberships[];
   product!: Product;
+  availibility!: number;
 
   constructor(date: Date) {
     this.date = date;
     this.memberships = [];
+    this.availibility = Math.floor(Math.random() * 101);
   }
   addMembership(membership: AccessControlMemberships) {
     this.memberships.push(membership);
@@ -28,6 +30,9 @@ export default class VariantBuilder {
   setProduct(product: Product) {
     this.product = product;
   }
+  setAvailibility(availibility: number) {
+    this.availibility = availibility;
+  }
   build(): Variants {
     if (!this.startDate) {
       this.startDate = this.date; // today if not set
@@ -38,10 +43,9 @@ export default class VariantBuilder {
     if (!this.product) {
       throw new Error("Product not set");
     }
-    let availibility = Math.floor(Math.random() * 101);
     this.variant = {
       accessControlMemberships: this.memberships,
-      availability: availibility,
+      availability: this.availibility,
       contentsMemberships: [],
       currencyCode: "EUR",
       dateActualFrom: null,
@@ -65,7 +69,7 @@ export default class VariantBuilder {
       inventoryId: randomstring.generate(36),
       isProductVariantActive: true,
       isProductVariantHakaAuthenticationRequired: false,
-      isProductVariantMarkedAsOutOfStock: availibility ? false : true,
+      isProductVariantMarkedAsOutOfStock: this.availibility ? false : true,
       isProductVariantTransferable: true,
       isProductVariantVisible: true,
       linkedProductVariants: [],

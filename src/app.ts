@@ -47,7 +47,6 @@ app.use(express.json());
       }),
       permissions
     );
-    console.dir(new RandomEvent(new Date()).getEvent(), { depth: null });
 
     app.use(
       helmet({
