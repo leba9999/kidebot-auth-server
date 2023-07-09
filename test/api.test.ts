@@ -17,6 +17,9 @@ import {
   postAsUserAdmin,
   postUser,
 } from "./userFunctions";
+import { Event } from "../src/interfaces/Event";
+import { Express } from "express-serve-static-core";
+import { deleteRandomEvent, postRandomEvent } from "./eventFunctions";
 
 describe("Testing graphql api", () => {
   beforeAll(async () => {
@@ -38,6 +41,9 @@ describe("Testing graphql api", () => {
   let admin1Data: LoginResponse;
   let admin2Data: LoginResponse;
   let admin3Data: LoginResponse;
+
+  let randomEventData: Event;
+  let availabilityData: Event;
 
   const testUser1: TestUser = {
     username: "testuser1",
@@ -153,11 +159,22 @@ describe("Testing graphql api", () => {
   it("should delete own admin account", async () => {
     await deleteUser(app, admin2Data.token);
   });
-
   // test delete user based on token
   it("should delete first user", async () => {
     await deleteUser(app, user1Data.token);
   });
+
+  it("should generate random event", async () => {
+    randomEventData = await postRandomEvent(app, admin1Data.token);
+  });
+  it("should generate random event", async () => {
+    await deleteRandomEvent(
+      app,
+      admin1Data.token,
+      randomEventData.model.product.id
+    );
+  });
+
   test("Brute force attack simulation", async () => {
     const maxAttempts = 20;
 

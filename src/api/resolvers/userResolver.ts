@@ -75,7 +75,6 @@ export default {
           extensions: { code: error.codeName },
         });
       }
-      console.log(updatedUser);
       return updatedUser;
     },
     deleteUser: async (
